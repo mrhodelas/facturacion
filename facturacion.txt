@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template de Facturación</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Template de Facturación</h1>
+    <div class="form-group">
+        <label for="sociedad">Sociedad</label>
+        <select id="sociedad">
+            <option>Choose Sociedad Noatum</option>
+            <option>Terminal Santander</option>
+            <option>Terminal Terragona</option>
+            <option>Terminal Sagunto</option>
+            <option>Terminal Malaga</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="serie">Serie</label>
+        <select id="serie">
+            <option>VB</option>
+            <option>VE</option>
+            <option>VS</option>
+            <option>VD</option>
+            <option>CE</option>
+            <option>AF</option>
+            <option>VX</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="customer">Customer</label>
+        <select id="customer">
+            <option>Unit European Car</option>
+            <option>Coll Marítima</option>
+            <option>Valencia Terminal</option>
+            <option>Arcelor Logistic</option>
+            <option>Toyota Gibral</option>
+            <option>Mazda Corp</option>
+            <option>Audi</option>
+            <option>Subaru España</option>
+        </select>
+    </div>
+
+    <h2>Detalle de la Factura</h2>
+    <table id="detalleFactura">
+        <thead>
+            <tr>
+                <th># Ítem</th>
+                <th>Descripción</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+                <th>IRPF (%)</th>
+                <th>IVA (%)</th>
+                <th>Total</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Detalle de la factura se agregará aquí -->
+        </tbody>
+    </table>
+    <div class="buttons">
+        <button onclick="addItem()">Agregar Ítem</button>
+    </div>
+    <div class="buttons">
+        <button onclick="saveDraft()">Draft</button>
+        <button onclick="generateInvoice()">Invoiced</button>
+    </div>
+</div>
+
+<script>
+    let itemCount = 0;
+
+    function addItem() {
+        itemCount++;
+        const table = document.getElementById('detalleFactura').getElementsByTagName('tbody')[0];
+        const row = table.insertRow();
+        row.innerHTML = `
+            <td>${itemCount}</td>
+            <td>
+                <select>
+                    <option>Descarga/Carga</option>
+                    <option>Lavado</option>
+                    <option>THC</option>
+                    <option>Traslado</option>
+                    <option>Lashing</option>
+                    <option>Pesaje</option>
+                </select>
+            </td>
+            <td><input type="number" class="unit-price" value="0" oninput="calculateTotal(this)"></td>
+            <td><input type="number" class="quantity" value="1" oninput="calculateTotal(this)"></td>
+            <td><input type="number" class="irpf" value="0" oninput="calculateTotal(this)"></td>
+            <td><input type="number" class="iva" value="0" oninput="calculateTotal(this)"></td>
+            <td class="total">0</td>
+            <td><button onclick="removeItem(this)">Eliminar</button></td>
+        `;
+    }
+
+    function calculateTotal(input) {
+        const row = input.parentElement.parentElement;
+        const unitPrice = parseFloat(row.querySelector('.unit-price').value) || 0;
+        const quantity = parseFloat(row.querySelector('.quantity').value) || 0;
+        const irpf = parseFloat(row.querySelector('.irpf').value) / 100 || 0;
+        const iva = parseFloat(row.querySelector('.iva').value) / 100 || 0;
+        const total = (unitPrice * quantity) * (1 + irpf) * (1 + iva);
+        row.querySelector('.total').innerText = total.toFixed(2);
+    }
+
+    function removeItem(button) {
+        const row = button.parentElement.parentElement;
+        row.remove();
+    }
+
+    function saveDraft() {
+        alert('Factura guardada como borrador');
+    }
+
+    function generateInvoice() {
+        alert('Factura generada');
+    }
+</script>
+
+</body>
+</html>
